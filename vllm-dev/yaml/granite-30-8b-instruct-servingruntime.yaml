@@ -1,0 +1,60 @@
+apiVersion: serving.kserve.io/v1alpha1
+kind: ServingRuntime
+metadata:
+  annotations:
+    argocd.argoproj.io/managed-by: openshift-gitops
+    argocd.argoproj.io/sync-wave: "1"
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"serving.kserve.io/v1alpha1","kind":"ServingRuntime","metadata":{"annotations":{"argocd.argoproj.io/managed-by":"openshift-gitops","argocd.argoproj.io/sync-wave":"1","opendatahub.io/accelerator-name":"migrated-gpu","opendatahub.io/apiProtocol":"REST","opendatahub.io/recommended-accelerators":"[\"nvidia.com/gpu\"]","opendatahub.io/template-display-name":"RAD - vLLM ServingRuntime for KServe","opendatahub.io/template-name":"vllm-runtime-copy","openshift.io/display-name":"granite-30-8b-instruct"},"labels":{"component":"aiworkshop","opendatahub.io/dashboard":"true","rht-gitops.com/openshift-gitops":"model-deployment"},"name":"granite-30-8b-instruct","namespace":"aiworkshop"},"spec":{"annotations":{"prometheus.io/path":"/metrics","prometheus.io/port":"8080"},"containers":[{"args":["--port=8080","--model=/mnt/models","--served-model-name={{.Name}}","--distributed-executor-backend=mp","--max-model-len","6144"],"command":["python","-m","vllm.entrypoints.openai.api_server"],"env":[{"name":"HF_HOME","value":"/tmp/hf_home"}],"image":"quay.io/modh/vllm:rhoai-2.16-cuda","name":"kserve-container","ports":[{"containerPort":8080,"protocol":"TCP"}],"volumeMounts":[{"mountPath":"/dev/shm","name":"shm"}]}],"multiModel":false,"supportedModelFormats":[{"autoSelect":true,"name":"vLLM"}],"volumes":[{"emptyDir":{"medium":"Memory","sizeLimit":"2Gi"},"name":"shm"}]}}
+    opendatahub.io/accelerator-name: migrated-gpu
+    opendatahub.io/apiProtocol: REST
+    opendatahub.io/recommended-accelerators: '["nvidia.com/gpu"]'
+    opendatahub.io/template-display-name: RAD - vLLM ServingRuntime for KServe
+    opendatahub.io/template-name: vllm-runtime-copy
+    openshift.io/display-name: granite-30-8b-instruct
+  creationTimestamp: "2025-04-03T13:32:59Z"
+  generation: 1
+  labels:
+    component: aiworkshop
+    opendatahub.io/dashboard: "true"
+    rht-gitops.com/openshift-gitops: model-deployment
+  name: granite-30-8b-instruct
+  namespace: aiworkshop
+  resourceVersion: "119058"
+  uid: 5ee4a489-6985-4f18-9574-dbe3ea4ba477
+spec:
+  annotations:
+    prometheus.io/path: /metrics
+    prometheus.io/port: "8080"
+  containers:
+  - args:
+    - --port=8080
+    - --model=/mnt/models
+    - --served-model-name={{.Name}}
+    - --distributed-executor-backend=mp
+    - --max-model-len
+    - "6144"
+    command:
+    - python
+    - -m
+    - vllm.entrypoints.openai.api_server
+    env:
+    - name: HF_HOME
+      value: /tmp/hf_home
+    image: quay.io/modh/vllm:rhoai-2.16-cuda
+    name: kserve-container
+    ports:
+    - containerPort: 8080
+      protocol: TCP
+    volumeMounts:
+    - mountPath: /dev/shm
+      name: shm
+  multiModel: false
+  supportedModelFormats:
+  - autoSelect: true
+    name: vLLM
+  volumes:
+  - emptyDir:
+      medium: Memory
+      sizeLimit: 2Gi
+    name: shm

@@ -1,0 +1,60 @@
+apiVersion: serving.kserve.io/v1alpha1
+kind: ServingRuntime
+metadata:
+  annotations:
+    argocd.argoproj.io/managed-by: openshift-gitops
+    argocd.argoproj.io/sync-wave: "1"
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"serving.kserve.io/v1alpha1","kind":"ServingRuntime","metadata":{"annotations":{"argocd.argoproj.io/managed-by":"openshift-gitops","argocd.argoproj.io/sync-wave":"1","opendatahub.io/accelerator-name":"migrated-gpu","opendatahub.io/apiProtocol":"REST","opendatahub.io/recommended-accelerators":"[\"nvidia.com/gpu\"]","opendatahub.io/template-display-name":"RAD - vLLM ServingRuntime for KServe","opendatahub.io/template-name":"vllm-runtime-copy","openshift.io/display-name":"parasol-chat"},"labels":{"component":"aiworkshop","opendatahub.io/dashboard":"true","rht-gitops.com/openshift-gitops":"model-deployment"},"name":"parasol-chat","namespace":"aiworkshop"},"spec":{"annotations":{"prometheus.io/path":"/metrics","prometheus.io/port":"8080"},"containers":[{"args":["--port=8080","--model=/mnt/models","--served-model-name={{.Name}}","--distributed-executor-backend=mp","--max-model-len","4096"],"command":["python","-m","vllm.entrypoints.openai.api_server"],"env":[{"name":"HF_HOME","value":"/tmp/hf_home"}],"image":"quay.io/modh/vllm:rhoai-2.16-cuda","name":"kserve-container","ports":[{"containerPort":8080,"protocol":"TCP"}],"volumeMounts":[{"mountPath":"/dev/shm","name":"shm"}]}],"multiModel":false,"supportedModelFormats":[{"autoSelect":true,"name":"vLLM"}],"volumes":[{"emptyDir":{"medium":"Memory","sizeLimit":"2Gi"},"name":"shm"}]}}
+    opendatahub.io/accelerator-name: migrated-gpu
+    opendatahub.io/apiProtocol: REST
+    opendatahub.io/recommended-accelerators: '["nvidia.com/gpu"]'
+    opendatahub.io/template-display-name: RAD - vLLM ServingRuntime for KServe
+    opendatahub.io/template-name: vllm-runtime-copy
+    openshift.io/display-name: parasol-chat
+  creationTimestamp: "2025-04-03T13:32:59Z"
+  generation: 1
+  labels:
+    component: aiworkshop
+    opendatahub.io/dashboard: "true"
+    rht-gitops.com/openshift-gitops: model-deployment
+  name: parasol-chat
+  namespace: aiworkshop
+  resourceVersion: "119064"
+  uid: 4d217cb9-65b1-44be-9977-a3391240537c
+spec:
+  annotations:
+    prometheus.io/path: /metrics
+    prometheus.io/port: "8080"
+  containers:
+  - args:
+    - --port=8080
+    - --model=/mnt/models
+    - --served-model-name={{.Name}}
+    - --distributed-executor-backend=mp
+    - --max-model-len
+    - "4096"
+    command:
+    - python
+    - -m
+    - vllm.entrypoints.openai.api_server
+    env:
+    - name: HF_HOME
+      value: /tmp/hf_home
+    image: quay.io/modh/vllm:rhoai-2.16-cuda
+    name: kserve-container
+    ports:
+    - containerPort: 8080
+      protocol: TCP
+    volumeMounts:
+    - mountPath: /dev/shm
+      name: shm
+  multiModel: false
+  supportedModelFormats:
+  - autoSelect: true
+    name: vLLM
+  volumes:
+  - emptyDir:
+      medium: Memory
+      sizeLimit: 2Gi
+    name: shm

@@ -1,0 +1,48 @@
+apiVersion: serving.kserve.io/v1alpha1
+kind: ServingRuntime
+metadata:
+  annotations:
+    argocd.argoproj.io/managed-by: openshift-gitops
+    argocd.argoproj.io/sync-wave: "1"
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"serving.kserve.io/v1alpha1","kind":"ServingRuntime","metadata":{"annotations":{"argocd.argoproj.io/managed-by":"openshift-gitops","argocd.argoproj.io/sync-wave":"1","opendatahub.io/recommended-accelerators":"[\"nvidia.com/gpu\"]","openshift.io/display-name":"RAD - vLLM ServingRuntime for KServe"},"labels":{"component":"aiworkshop","opendatahub.io/dashboard":"true","rht-gitops.com/openshift-gitops":"model-deployment"},"name":"vllm-runtime-copy","namespace":"aiworkshop"},"spec":{"annotations":{"prometheus.io/path":"/metrics","prometheus.io/port":"8080"},"containers":[{"args":["--port=8080","--model=/mnt/models","--served-model-name={{.Name}}","--distributed-executor-backend=mp","--max-model-len","6144"],"command":["python","-m","vllm.entrypoints.openai.api_server"],"env":[{"name":"HF_HOME","value":"/tmp/hf_home"}],"image":"quay.io/modh/vllm:rhoai-2.16-cuda","name":"kserve-container","ports":[{"containerPort":8080,"protocol":"TCP"}]}],"multiModel":false,"supportedModelFormats":[{"autoSelect":true,"name":"vLLM"}]}}
+    opendatahub.io/recommended-accelerators: '["nvidia.com/gpu"]'
+    openshift.io/display-name: RAD - vLLM ServingRuntime for KServe
+  creationTimestamp: "2025-04-03T13:32:59Z"
+  generation: 1
+  labels:
+    component: aiworkshop
+    opendatahub.io/dashboard: "true"
+    rht-gitops.com/openshift-gitops: model-deployment
+  name: vllm-runtime-copy
+  namespace: aiworkshop
+  resourceVersion: "119072"
+  uid: 08595897-b9f7-4b42-8ae9-38d24b017ae0
+spec:
+  annotations:
+    prometheus.io/path: /metrics
+    prometheus.io/port: "8080"
+  containers:
+  - args:
+    - --port=8080
+    - --model=/mnt/models
+    - --served-model-name={{.Name}}
+    - --distributed-executor-backend=mp
+    - --max-model-len
+    - "6144"
+    command:
+    - python
+    - -m
+    - vllm.entrypoints.openai.api_server
+    env:
+    - name: HF_HOME
+      value: /tmp/hf_home
+    image: quay.io/modh/vllm:rhoai-2.16-cuda
+    name: kserve-container
+    ports:
+    - containerPort: 8080
+      protocol: TCP
+  multiModel: false
+  supportedModelFormats:
+  - autoSelect: true
+    name: vLLM
